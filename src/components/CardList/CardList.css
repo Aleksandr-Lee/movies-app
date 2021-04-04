@@ -1,0 +1,14 @@
+.card-list {
+  min-width: 1010px;
+  /* min-height: 1147px; */
+  /* background: red; */
+  display: flex;
+  flex-wrap: wrap;
+}
+.card-list--results {
+	font-family: 'Inter', sans-serif;
+	font-size: 50px;
+	color: #c01212;
+	margin: 0 auto;
+	margin-top: 300px;
+}

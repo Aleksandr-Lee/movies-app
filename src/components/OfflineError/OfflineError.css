@@ -1,0 +1,9 @@
+.ant-result {
+  margin: 0 auto;
+}
+.ant-result-subtitle {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 40px;
+  line-height: 1.6;
+  text-align: center;
+}
