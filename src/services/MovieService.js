@@ -3,21 +3,13 @@ export default class MovieService {
 
   apiKey = '465ee7f2ce04ca7b302380784fddcbe0';
 
-  async getResource(url) {
-    const res = await fetch(
-      url
-      // `${this.apiBase}${this.apiKey}&language=en-US&query=${url}&page=1&include_adult=false`
-    );
+  async getResource(url, postRequest = null) {
+    const res = await fetch(url, postRequest);
     if (!res.ok) {
       throw new Error(`Ошибка, данные не получены ${res.status}`);
     }
     return res.json();
   }
-
-  //   async getMovies() {
-  //     const res = await this.getResource("return");
-  //     return res.results.splice(0, 6);
-  //   }
 
   async getMovies(search, page) {
     if (search === '') {
@@ -29,21 +21,30 @@ export default class MovieService {
     return res;
   }
 
-  async getQuestSession() {
-    const resSession = await fetch(
-      `${this.apiBase}authentication/guest_session/new?api_key=${this.apiKey}`
-    );
-    return resSession.json();
+  async getGuestSession() {
+    const url = `${this.apiBase}authentication/guest_session/new?api_key=${this.apiKey}`;
+    const res = await this.getResource(url);
+    return res;
   }
 
-  async ratedFilm(id) {
-    const ratedSession = await fetch(
-      `${this.apiBase}guest_session/${id}/rated/movies?api_key=${this.apiKey}&language=en-US&sort_by=created_at.asc`
-    );
-    return ratedSession.json();
+  async setRatedFilm(id, sessionId, value) {
+    const url = `${this.apiBase}movie/${id}/rating?api_key=${this.apiKey}&guest_session_id=${sessionId}`;
+    const postRequest = {
+      method: 'POST',
+      api_key: this.apiKey,
+      movie_id: id,
+      body: JSON.stringify({ value }),
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+    };
+    const res = await this.getResource(url, postRequest);
+    return res;
+  }
+
+  async ratedFilm(sessionId) {
+    const url = `${this.apiBase}guest_session/${sessionId}/rated/movies?api_key=${this.apiKey}&language=en-US&sort_by=created_at.asc`;
+    const res = await this.getResource(url);
+    return res;
   }
 }
-// const movies = new MovieService();
-// movies.getMovies().then((body) => {
-//   console.log(body);
-// });

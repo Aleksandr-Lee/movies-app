@@ -1,0 +1,19 @@
+.vote-wraooer {
+  position: relative;
+  left: 216px;
+  top: 10px;
+  background: #fff;
+  border: 3px solid;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+span {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  line-height: 100%;
+}

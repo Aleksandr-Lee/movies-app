@@ -14,7 +14,9 @@
 .card-info {
   padding-left: 20px;
 }
+
 .card-title {
+  position: absolute;
   font-family: 'Inter', sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -26,6 +28,7 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow-y: hidden;
+  max-width: 219px;
 }
 .card-date {
   font-family: 'Inter', sans-serif;
@@ -34,7 +37,7 @@
   font-size: 12px;
   line-height: 22px;
   color: #827e7e;
-  margin: 0 0 10px 0;
+  margin: 7px 0 10px 0;
 }
 .card-category {
   font-family: 'Inter', sans-serif;

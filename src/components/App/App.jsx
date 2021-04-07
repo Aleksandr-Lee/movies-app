@@ -9,7 +9,7 @@ import ErrorIndicator from '../ErrorIndicator';
 import posterNull from './no-poster-available.jpg';
 import OfflineError from '../OfflineError';
 import PaginationFilm from '../PaginationFilm';
-
+import RatedFilm from '../RatedFilm';
 import './App.css';
 
 class App extends React.Component {
@@ -31,6 +31,7 @@ class App extends React.Component {
       totalResults: 0,
       totalPages: 0,
       hasError: false,
+      sessionId: null,
     };
   }
 
@@ -39,7 +40,6 @@ class App extends React.Component {
       this.movies
         .getMovies(search, page)
         .then((film) => {
-          console.log(film);
           this.setState({
             films: film.results,
             totalResults: film.total_results,
@@ -56,19 +56,22 @@ class App extends React.Component {
           }
         });
     };
-    this.questSession.getQuestSession().then((sessionId) => {
-      console.log(sessionId.guest_session_id);
-      this.ratedFilm.ratedFilm(sessionId.guest_session_id).then((rated) => {
-        console.log(rated);
-        //   this.setState({
-        //     ratedFilm: rated.results,
-        //   });
+    this.questSession.getGuestSession().then((sessionId) => {
+      this.setState({
+        sessionId: sessionId.guest_session_id,
       });
     });
+
+    this.rated = (sessionId) => {
+      this.ratedFilm.ratedFilm(sessionId).then((rated) => {
+        this.setState({
+          ratedFilm: rated.results,
+        });
+      });
+    };
   }
 
   componentDidCatch() {
-    console.log('componentDidCatch()');
     this.setState({ hasError: true });
   }
 
@@ -88,10 +91,6 @@ class App extends React.Component {
       : `https://image.tmdb.org/t/p/w500/${poster}`;
   }
 
-  //   callback = (key) => {
-  //     console.log(key);
-  //   };
-
   render() {
     const {
       films,
@@ -99,14 +98,13 @@ class App extends React.Component {
       error,
       searchFilm,
       totalResults,
-      // pagesCount,
       pageSize,
       totalPages,
       hasError,
-      // questSession,
       ratedFilm,
+      sessionId,
     } = this.state;
-    console.log(ratedFilm);
+
     const { TabPane } = Tabs;
 
     if (hasError) {
@@ -118,7 +116,16 @@ class App extends React.Component {
       loading && navigator.onLine ? <LoadingIndicator /> : null;
 
     const content = !(loading || error) ? (
-      <CardList films={films} createPoster={this.createPoster} />
+      <CardList
+        films={films}
+        ratedFilm={ratedFilm}
+        createPoster={this.createPoster}
+        sessionId={sessionId}
+      />
+    ) : null;
+
+    const contentRated = !(loading || error) ? (
+      <RatedFilm ratedFilm={ratedFilm} />
     ) : null;
 
     const offline = !navigator.onLine ? <OfflineError /> : null;
@@ -134,7 +141,13 @@ class App extends React.Component {
 
     return (
       <div>
-        <Tabs defaultActiveKey="1" centered>
+        <Tabs
+          defaultActiveKey="1"
+          centered
+          onChange={(key) => {
+            if (key === '2') this.rated(sessionId);
+          }}
+        >
           <TabPane tab="Search" key="1">
             <div className="wrapper">
               <SearchPanel
@@ -149,10 +162,7 @@ class App extends React.Component {
             </div>
           </TabPane>
           <TabPane tab="Rated" key="2">
-            <div className="wrapper">
-              {pagination}
-              {content}
-            </div>
+            <div className="wrapper">{contentRated}</div>
           </TabPane>
         </Tabs>
       </div>
