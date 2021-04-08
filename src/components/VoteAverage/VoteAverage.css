@@ -1,7 +1,7 @@
 .vote-wraooer {
-  position: relative;
-  left: 216px;
-  top: 10px;
+  position: absolute;
+  right: 0;
+  top: 0;
   background: #fff;
   border: 3px solid;
   border-radius: 50%;
@@ -10,8 +10,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 12px 9px 0 0;
 }
-
 span {
   font-family: 'Inter', sans-serif;
   font-size: 12px;

@@ -50,6 +50,7 @@ export default class CardFilm extends React.Component {
       date === undefined || date === ''
         ? 'no date release'
         : format(new Date(date), 'MMMM dd, yyyy');
+
     return (
       <div className="card-wrapper">
         <img className="card-picture" src={poster} alt="#" />
@@ -60,14 +61,16 @@ export default class CardFilm extends React.Component {
           <span className="card-category">Action</span>
           <span className="card-category">Drama</span>
           <p className="card-description">{description}</p>
-          <Rate
-            allowHalf
-            defaultValue={rated}
-            count={10}
-            onChange={(value) => {
-              this.ratedFilms(id, sessionId, value);
-            }}
-          />
+          <div className="card-rate">
+            <Rate
+              allowHalf
+              defaultValue={rated}
+              count={10}
+              onChange={(value) => {
+                this.ratedFilms(id, sessionId, value);
+              }}
+            />
+          </div>
         </div>
       </div>
     );

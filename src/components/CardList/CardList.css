@@ -1,5 +1,5 @@
 .card-list {
-  min-width: 1010px;
+  max-width: 1010px;
   /* min-height: 1147px; */
   /* background: red; */
   display: flex;
