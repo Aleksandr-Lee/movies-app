@@ -47,4 +47,10 @@ export default class MovieService {
     const res = await this.getResource(url);
     return res;
   }
+
+  async genres() {
+    const url = `${this.apiBase}genre/movie/list?api_key=${this.apiKey}&language=en-US`;
+    const res = await this.getResource(url);
+    return res;
+  }
 }

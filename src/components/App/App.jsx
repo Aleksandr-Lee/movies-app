@@ -6,10 +6,10 @@ import CardList from '../CardList';
 import MovieService from '../../services/MovieService';
 import LoadingIndicator from '../LoadingIndicator';
 import ErrorIndicator from '../ErrorIndicator';
-import posterNull from './no-poster-available.jpg';
 import OfflineError from '../OfflineError';
 import PaginationFilm from '../PaginationFilm';
 import RatedFilm from '../RatedFilm';
+import Context from '../MovieServiceContext';
 import './App.css';
 
 class App extends React.Component {
@@ -19,11 +19,13 @@ class App extends React.Component {
 
   ratedFilm = new MovieService();
 
+  genres = new MovieService();
+
   constructor() {
     super();
     this.state = {
-      films: [],
-      ratedFilm: [],
+      films: null,
+      ratedFilm: null,
       loading: false,
       error: false,
       searchFilm: '',
@@ -32,6 +34,7 @@ class App extends React.Component {
       totalPages: 0,
       hasError: false,
       sessionId: null,
+      genres: [],
     };
   }
 
@@ -69,6 +72,12 @@ class App extends React.Component {
         });
       });
     };
+
+    this.genres.genres().then((genres) => {
+      this.setState({
+        genres: genres.genres,
+      });
+    });
   }
 
   componentDidCatch() {
@@ -85,12 +94,6 @@ class App extends React.Component {
     }));
   }, 500);
 
-  createPoster(poster) {
-    return poster === null
-      ? `${posterNull}`
-      : `https://image.tmdb.org/t/p/w500/${poster}`;
-  }
-
   render() {
     const {
       films,
@@ -103,6 +106,7 @@ class App extends React.Component {
       hasError,
       ratedFilm,
       sessionId,
+      genres,
     } = this.state;
 
     const { TabPane } = Tabs;
@@ -116,12 +120,7 @@ class App extends React.Component {
       loading && navigator.onLine ? <LoadingIndicator /> : null;
 
     const content = !(loading || error) ? (
-      <CardList
-        films={films}
-        ratedFilm={ratedFilm}
-        createPoster={this.createPoster}
-        sessionId={sessionId}
-      />
+      <CardList films={films} ratedFilm={ratedFilm} />
     ) : null;
 
     const contentRated = !(loading || error) ? (
@@ -140,32 +139,34 @@ class App extends React.Component {
       ) : null;
 
     return (
-      <div>
-        <Tabs
-          defaultActiveKey="1"
-          centered
-          onChange={(key) => {
-            if (key === '2') this.rated(sessionId);
-          }}
-        >
-          <TabPane tab="Search" key="1">
-            <div className="wrapper">
-              <SearchPanel
-                searchFilm={searchFilm}
-                onSearchFilm={this.onSearchFilm}
-              />
-              {pagination}
-              {errorMessage}
-              {loadingIndicator}
-              {content}
-              {offline}
-            </div>
-          </TabPane>
-          <TabPane tab="Rated" key="2">
-            <div className="wrapper">{contentRated}</div>
-          </TabPane>
-        </Tabs>
-      </div>
+      <Context.Provider value={{ genres, sessionId }}>
+        <div>
+          <Tabs
+            defaultActiveKey="1"
+            centered
+            onChange={(key) => {
+              if (key === '2') this.rated(sessionId);
+            }}
+          >
+            <TabPane tab="Search" key="1">
+              <div className="wrapper">
+                <SearchPanel
+                  searchFilm={searchFilm}
+                  onSearchFilm={this.onSearchFilm}
+                />
+                {pagination}
+                {errorMessage}
+                {loadingIndicator}
+                {content}
+                {offline}
+              </div>
+            </TabPane>
+            <TabPane tab="Rated" key="2">
+              <div className="wrapper">{contentRated}</div>
+            </TabPane>
+          </Tabs>
+        </div>
+      </Context.Provider>
     );
   }
 }
