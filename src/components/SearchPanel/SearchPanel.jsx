@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Input } from 'antd';
 import 'antd/dist/antd.css';
@@ -11,22 +12,15 @@ export default class SearchPanel extends React.Component {
     };
   }
 
-  // eslint-disable-next-line consistent-return
   onSearchFilm = (event) => {
-    // eslint-disable-next-line react/prop-types
-    const { pageNumber } = this.props;
-    // eslint-disable-next-line react/prop-types
     const { onSearchFilm } = this.props;
     const searchFilm = event.target.value;
     this.setState({ searchFilm });
-    onSearchFilm(searchFilm, pageNumber);
+    onSearchFilm(searchFilm);
   };
 
   render() {
     const { searchFilm } = this.state;
-    // eslint-disable-next-line react/prop-types
-    //  const { pageNumber } = this.props;
-    //   console.log(pageNumber);
     return (
       <div className="search-panel">
         <Input

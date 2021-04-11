@@ -25,10 +25,9 @@ class App extends React.Component {
     super();
     this.state = {
       films: null,
-      ratedFilm: null,
+      ratedFilm: [],
       loading: false,
       error: false,
-      searchFilm: '',
       pageSize: 20,
       totalResults: 0,
       totalPages: 0,
@@ -59,6 +58,7 @@ class App extends React.Component {
           }
         });
     };
+
     this.questSession.getGuestSession().then((sessionId) => {
       this.setState({
         sessionId: sessionId.guest_session_id,
@@ -66,7 +66,7 @@ class App extends React.Component {
     });
 
     this.rated = (sessionId) => {
-      this.ratedFilm.ratedFilm(sessionId).then((rated) => {
+      this.ratedFilm.getRatedFilm(sessionId).then((rated) => {
         this.setState({
           ratedFilm: rated.results,
         });
@@ -99,7 +99,6 @@ class App extends React.Component {
       films,
       loading,
       error,
-      searchFilm,
       totalResults,
       pageSize,
       totalPages,
@@ -114,6 +113,7 @@ class App extends React.Component {
     if (hasError) {
       return <ErrorIndicator />;
     }
+
     const errorMessage = error ? <ErrorIndicator /> : null;
 
     const loadingIndicator =
@@ -121,10 +121,6 @@ class App extends React.Component {
 
     const content = !(loading || error) ? (
       <CardList films={films} ratedFilm={ratedFilm} />
-    ) : null;
-
-    const contentRated = !(loading || error) ? (
-      <RatedFilm ratedFilm={ratedFilm} />
     ) : null;
 
     const offline = !navigator.onLine ? <OfflineError /> : null;
@@ -150,10 +146,7 @@ class App extends React.Component {
           >
             <TabPane tab="Search" key="1">
               <div className="wrapper">
-                <SearchPanel
-                  searchFilm={searchFilm}
-                  onSearchFilm={this.onSearchFilm}
-                />
+                <SearchPanel onSearchFilm={this.onSearchFilm} />
                 {pagination}
                 {errorMessage}
                 {loadingIndicator}
@@ -162,7 +155,10 @@ class App extends React.Component {
               </div>
             </TabPane>
             <TabPane tab="Rated" key="2">
-              <div className="wrapper">{contentRated}</div>
+              <div className="wrapper">
+                {' '}
+                <RatedFilm ratedFilm={ratedFilm} />
+              </div>
             </TabPane>
           </Tabs>
         </div>
