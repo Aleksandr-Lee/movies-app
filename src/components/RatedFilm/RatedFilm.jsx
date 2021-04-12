@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import CardList from '../CardList';
 import ErrorIndicator from '../ErrorIndicator';
 
@@ -15,6 +15,14 @@ const RatedFilm = (props) => {
   );
 
   return retedContext;
+};
+
+RatedFilm.defaultProps = {
+  ratedFilm: [],
+};
+
+RatedFilm.propTypes = {
+  ratedFilm: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default RatedFilm;

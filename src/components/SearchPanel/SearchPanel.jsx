@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import 'antd/dist/antd.css';
 import './SearchPanel.css';
 
-export default class SearchPanel extends React.Component {
+class SearchPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,3 +37,13 @@ export default class SearchPanel extends React.Component {
     );
   }
 }
+
+SearchPanel.defaultProps = {
+  onSearchFilm: () => {},
+};
+
+SearchPanel.propsTypes = {
+  onSearchFilm: PropTypes.func,
+};
+
+export default SearchPanel;

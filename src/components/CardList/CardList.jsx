@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import CardFilm from '../CardFilm';
 import NoResultsFilm from '../NoResultsFilm';
 import './CardList.css';
@@ -36,6 +36,16 @@ const CardList = (props) => {
       {film.length === 0 ? <NoResultsFilm /> : film}
     </div>
   );
+};
+
+CardList.defaultProps = {
+  films: null,
+  ratedFilm: [],
+};
+
+CardList.propTypes = {
+  films: PropTypes.arrayOf(PropTypes.object),
+  ratedFilm: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CardList;

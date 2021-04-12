@@ -1,10 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Pagination } from 'antd';
 import 'antd/dist/antd.css';
 import './PaginationFilm.css';
 
 const PaginationFilm = (props) => {
-  // eslint-disable-next-line react/prop-types
   const { handlePageClick, totalCount, pageSize } = props;
   return (
     <Pagination
@@ -16,6 +16,18 @@ const PaginationFilm = (props) => {
       showSizeChanger={false}
     />
   );
+};
+
+PaginationFilm.defaultProps = {
+  handlePageClick: () => {},
+  totalCount: 0,
+  pageSize: 20,
+};
+
+PaginationFilm.propTypes = {
+  handlePageClick: PropTypes.func,
+  totalCount: PropTypes.number,
+  pageSize: PropTypes.number,
 };
 
 export default PaginationFilm;

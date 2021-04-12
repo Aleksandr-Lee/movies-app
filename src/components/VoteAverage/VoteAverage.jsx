@@ -1,9 +1,8 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import './VoteAverage.css';
 
 const VoteAverage = (props) => {
-  // eslint-disable-next-line react/prop-types
   const { voteAverage } = props;
   let colorRating = '#E90000';
 
@@ -18,11 +17,17 @@ const VoteAverage = (props) => {
   }
 
   return (
-    // eslint-disable-next-line react/style-prop-object
     <div className="vote-wraooer" style={{ borderColor: colorRating }}>
       <span>{voteAverage}</span>
     </div>
   );
+};
+
+VoteAverage.defaultProps = {
+  voteAverage: 0,
+};
+VoteAverage.propTypes = {
+  voteAverage: PropTypes.number,
 };
 
 export default VoteAverage;

@@ -1,8 +1,6 @@
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
 /* eslint-disable no-shadow */
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import { Rate } from 'antd';
 import posterNull from './no-poster-available.jpg';
@@ -30,19 +28,21 @@ const CardFilm = (props) => {
     setRatedFilm.setRatedFilm(id, sessionId, value);
   };
 
-  const genresFilm = (genres, genresIds) => {
+  const genresFilms = (genres, genresIds) => {
     if (genres === undefined) {
       return;
     }
     const genresFilm = [];
-    genres.map((genres) => {
+    genres.map((genres) =>
       genresIds.map((genresIds) => {
         if (genres.id === genresIds) {
           genresFilm.push(genres.name);
         }
-      });
-    });
-    return genresFilm.map((genres) => (
+        return undefined;
+      })
+    );
+
+    genresFilm.map((genres) => (
       <span className="card-genres--item" key={genres}>
         {genres}
       </span>
@@ -68,7 +68,7 @@ const CardFilm = (props) => {
             <h1 className="card-title">{title}</h1>
             <VoteAverage voteAverage={voteAverage} />
             <h2 className="card-date">{dateResult}</h2>
-            <div className="card-genres">{genresFilm(genres, genresIds)}</div>
+            <div className="card-genres">{genresFilms(genres, genresIds)}</div>
             <p className="card-description">{description}</p>
             <div className="card-rate">
               <Rate
@@ -86,4 +86,21 @@ const CardFilm = (props) => {
     </Context.Consumer>
   );
 };
+
+CardFilm.defaultProps = {
+  poster: 'no poster',
+  rated: 0,
+};
+
+CardFilm.propTypes = {
+  poster: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  genresIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  description: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  rated: PropTypes.number,
+  voteAverage: PropTypes.number.isRequired,
+};
+
 export default CardFilm;
