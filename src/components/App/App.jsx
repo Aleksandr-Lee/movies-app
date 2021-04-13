@@ -13,13 +13,7 @@ import Context from '../MovieServiceContext';
 import './App.css';
 
 class App extends React.Component {
-  movies = new MovieService();
-
-  questSession = new MovieService();
-
-  ratedFilm = new MovieService();
-
-  genres = new MovieService();
+  moviesService = new MovieService();
 
   constructor() {
     super();
@@ -39,7 +33,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.movieDisplay = (search, page) => {
-      this.movies
+      this.moviesService
         .getMovies(search, page)
         .then((film) => {
           this.setState({
@@ -59,21 +53,21 @@ class App extends React.Component {
         });
     };
 
-    this.questSession.getGuestSession().then((sessionId) => {
+    this.moviesService.getGuestSession().then((sessionId) => {
       this.setState({
         sessionId: sessionId.guest_session_id,
       });
     });
 
     this.rated = (sessionId) => {
-      this.ratedFilm.getRatedFilm(sessionId).then((rated) => {
+      this.moviesService.getRatedFilm(sessionId).then((rated) => {
         this.setState({
           ratedFilm: rated.results,
         });
       });
     };
 
-    this.genres.genres().then((genres) => {
+    this.moviesService.genres().then((genres) => {
       this.setState({
         genres: genres.genres,
       });
@@ -136,32 +130,30 @@ class App extends React.Component {
 
     return (
       <Context.Provider value={{ genres, sessionId }}>
-        <div>
-          <Tabs
-            defaultActiveKey="1"
-            centered
-            onChange={(key) => {
-              if (key === '2') this.rated(sessionId);
-            }}
-          >
-            <TabPane tab="Search" key="1">
-              <div className="wrapper">
-                <SearchPanel onSearchFilm={this.onSearchFilm} />
-                {pagination}
-                {errorMessage}
-                {loadingIndicator}
-                {content}
-                {offline}
-              </div>
-            </TabPane>
-            <TabPane tab="Rated" key="2">
-              <div className="wrapper">
-                {' '}
-                <RatedFilm ratedFilm={ratedFilm} />
-              </div>
-            </TabPane>
-          </Tabs>
-        </div>
+        <Tabs
+          defaultActiveKey="1"
+          centered
+          onChange={(key) => {
+            if (key === '2') this.rated(sessionId);
+          }}
+        >
+          <TabPane tab="Search" key="1">
+            <div className="wrapper">
+              <SearchPanel onSearchFilm={this.onSearchFilm} />
+              {pagination}
+              {errorMessage}
+              {loadingIndicator}
+              {content}
+              {offline}
+            </div>
+          </TabPane>
+          <TabPane tab="Rated" key="2">
+            <div className="wrapper">
+              {' '}
+              <RatedFilm ratedFilm={ratedFilm} />
+            </div>
+          </TabPane>
+        </Tabs>
       </Context.Provider>
     );
   }

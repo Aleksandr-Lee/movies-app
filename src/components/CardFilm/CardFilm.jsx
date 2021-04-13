@@ -11,7 +11,7 @@ import 'antd/dist/antd.css';
 import './CardFilm.css';
 
 const CardFilm = (props) => {
-  const setRatedFilm = new MovieService();
+  const moviesService = new MovieService();
 
   const {
     poster,
@@ -25,13 +25,10 @@ const CardFilm = (props) => {
   } = props;
 
   const ratedFilms = (id, sessionId, value) => {
-    setRatedFilm.setRatedFilm(id, sessionId, value);
+    moviesService.setRatedFilm(id, sessionId, value);
   };
 
-  const genresFilms = (genres, genresIds) => {
-    if (genres === undefined) {
-      return;
-    }
+  const genresFilms = (genres) => {
     const genresFilm = [];
     genres.map((genres) =>
       genresIds.map((genresIds) => {
@@ -41,8 +38,7 @@ const CardFilm = (props) => {
         return undefined;
       })
     );
-
-    genresFilm.map((genres) => (
+    return genresFilm.map((genres) => (
       <span className="card-genres--item" key={genres}>
         {genres}
       </span>
@@ -68,7 +64,7 @@ const CardFilm = (props) => {
             <h1 className="card-title">{title}</h1>
             <VoteAverage voteAverage={voteAverage} />
             <h2 className="card-date">{dateResult}</h2>
-            <div className="card-genres">{genresFilms(genres, genresIds)}</div>
+            <div className="card-genres">{genresFilms(genres)}</div>
             <p className="card-description">{description}</p>
             <div className="card-rate">
               <Rate
