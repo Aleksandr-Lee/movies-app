@@ -38,22 +38,14 @@ export default class MovieService {
         'Content-Type': 'application/json;charset=utf-8',
       },
     };
-    try {
-      const res = await this.getResource(url, postRequest);
-      return res;
-    } catch (err) {
-      return err;
-    }
+    const res = await this.getResource(url, postRequest);
+    return res;
   }
 
   async getRatedFilm(sessionId) {
     const url = `${this.apiBase}guest_session/${sessionId}/rated/movies?api_key=${this.apiKey}&language=en-US&sort_by=created_at.asc`;
-    try {
-      const res = await this.getResource(url);
-      return res;
-    } catch (err) {
-      return err;
-    }
+    const res = await this.getResource(url);
+    return res;
   }
 
   async genres() {

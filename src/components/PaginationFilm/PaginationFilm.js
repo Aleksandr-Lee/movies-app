@@ -5,14 +5,14 @@ import 'antd/dist/antd.css';
 import './PaginationFilm.css';
 
 const PaginationFilm = (props) => {
-  const { handlePageClick, totalCount, pageSize } = props;
+  const { handlePageClick, totalCount } = props;
   return (
     <Pagination
       defaultCurrent={1}
       onChange={handlePageClick}
       size="small"
       total={totalCount}
-      pageSize={pageSize}
+      pageSize={20}
       showSizeChanger={false}
     />
   );
@@ -21,13 +21,11 @@ const PaginationFilm = (props) => {
 PaginationFilm.defaultProps = {
   handlePageClick: () => {},
   totalCount: 0,
-  pageSize: 20,
 };
 
 PaginationFilm.propTypes = {
   handlePageClick: PropTypes.func,
   totalCount: PropTypes.number,
-  pageSize: PropTypes.number,
 };
 
 export default PaginationFilm;

@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 import React from 'react';
 import debounce from 'lodash.debounce';
 import { Tabs } from 'antd';
@@ -18,11 +19,11 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
+      search: '',
       films: null,
       ratedFilm: [],
       loading: false,
       error: false,
-      pageSize: 20,
       totalResults: 0,
       totalPages: 0,
       hasError: false,
@@ -32,40 +33,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.movieDisplay = (search, page) => {
-      this.moviesService
-        .getMovies(search, page)
-        .then((film) => {
-          this.setState({
-            films: film.results,
-            totalResults: film.total_results,
-            totalPages: film.total_pages,
-            loading: false,
-          });
-        })
-        .catch(() => {
-          if (navigator.onLine) {
-            this.setState(() => ({
-              error: true,
-              loading: false,
-            }));
-          }
-        });
-    };
+    const { search, totalPages } = this.state;
+    this.movieDisplay(search, totalPages);
 
     this.moviesService.getGuestSession().then((sessionId) => {
       this.setState({
         sessionId: sessionId.guest_session_id,
       });
     });
-
-    this.rated = (sessionId) => {
-      this.moviesService.getRatedFilm(sessionId).then((rated) => {
-        this.setState({
-          ratedFilm: rated.results,
-        });
-      });
-    };
 
     this.moviesService.genres().then((genres) => {
       this.setState({
@@ -78,15 +53,55 @@ class App extends React.Component {
     this.setState({ hasError: true });
   }
 
-  onSearchFilm = debounce((event) => {
-    this.handlePageClick = (pageNumber) => {
-      this.movieDisplay(event, pageNumber);
-    };
-    this.movieDisplay(event);
+  movieDisplay = (search, page) => {
+    this.moviesService
+      .getMovies(search, page)
+      .then((film) => {
+        this.setState({
+          search,
+          films: film.results,
+          totalResults: film.total_results,
+          totalPages: film.total_pages,
+          loading: false,
+        });
+      })
+      .catch(() => {
+        if (navigator.onLine) {
+          this.setState(() => ({
+            error: true,
+            loading: false,
+          }));
+        }
+      });
+  };
+
+  rated = (sessionId) => {
+    this.moviesService.getRatedFilm(sessionId).then((rated) => {
+      this.setState({
+        ratedFilm: rated.results,
+      });
+    });
+  };
+
+  onSearchFilm = (event) => {
+    const searchFilm = event.target.value;
+    this.setState(() => ({
+      search: searchFilm,
+    }));
+    this.debounce(searchFilm, 1);
+  };
+
+  debounce = debounce((event, pageNumber) => {
+    this.movieDisplay(event, pageNumber);
     this.setState(() => ({
       loading: true,
     }));
   }, 500);
+
+  handlePageClick = (pageNumber) => {
+    const { search } = this.state;
+    this.movieDisplay(search, pageNumber);
+  };
 
   render() {
     const {
@@ -94,12 +109,12 @@ class App extends React.Component {
       loading,
       error,
       totalResults,
-      pageSize,
       totalPages,
       hasError,
       ratedFilm,
       sessionId,
       genres,
+      search,
     } = this.state;
 
     const { TabPane } = Tabs;
@@ -124,22 +139,21 @@ class App extends React.Component {
         <PaginationFilm
           handlePageClick={this.handlePageClick}
           totalCount={totalResults}
-          pageSize={pageSize}
         />
       ) : null;
 
     return (
       <Context.Provider value={{ genres, sessionId }}>
         <Tabs
-          defaultActiveKey="1"
+          defaultActiveKey="Search"
           centered
           onChange={(key) => {
-            if (key === '2') this.rated(sessionId);
+            if (key === 'Rated') this.rated(sessionId);
           }}
         >
-          <TabPane tab="Search" key="1">
+          <TabPane tab="Search" key="Search">
             <div className="wrapper">
-              <SearchPanel onSearchFilm={this.onSearchFilm} />
+              <SearchPanel onSearchFilm={this.onSearchFilm} search={search} />
               {pagination}
               {errorMessage}
               {loadingIndicator}
@@ -147,7 +161,7 @@ class App extends React.Component {
               {offline}
             </div>
           </TabPane>
-          <TabPane tab="Rated" key="2">
+          <TabPane tab="Rated" key="Rated">
             <div className="wrapper">
               {' '}
               <RatedFilm ratedFilm={ratedFilm} />

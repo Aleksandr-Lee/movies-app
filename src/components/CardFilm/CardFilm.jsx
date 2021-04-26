@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import { Rate } from 'antd';
-import posterNull from './no-poster-available.jpg';
+import posterNull from '../../Assets/Images/no-poster-available.jpg';
 import VoteAverage from '../VoteAverage';
 import MovieService from '../../services/MovieService';
 import Context from '../MovieServiceContext';
@@ -86,12 +86,13 @@ const CardFilm = (props) => {
 CardFilm.defaultProps = {
   poster: 'no poster',
   rated: 0,
+  date: '',
 };
 
 CardFilm.propTypes = {
   poster: PropTypes.string,
   title: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
+  date: PropTypes.string,
   genresIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   description: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
